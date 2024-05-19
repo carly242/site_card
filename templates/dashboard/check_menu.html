@@ -1,0 +1,102 @@
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check Password</title>
+</head>
+<body>
+
+<div class="container">
+    <h2>Entrer Votre mot de Passe</h2>
+    <p>Veillez entrer votre mot de passe pour continuer s'il vous plait</p>
+    <form id="password-form" method="POST" action="{% url 'checkmenu'  %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <input type="password" id="password" name="password" placeholder="Password">
+            <span toggle="#password" class="toggle-password fa fa-eye"></span>
+        </div>
+        <button type="submit">Envoyer</button>
+    </form>
+</div>
+
+<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+    }
+    
+    .container {
+        max-width: 400px;
+        margin: 50px auto;
+        padding: 20px;
+        background: #fff;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    h2 {
+        font-size: 24px;
+        margin-bottom: 20px;
+        color: #333;
+    }
+    
+    p {
+        margin-bottom: 20px;
+        color: #666;
+    }
+    
+    .form-group {
+        position: relative;
+    }
+    
+    input[type="password"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+    
+    .toggle-password {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: #999;
+    }
+    
+    button {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+    
+    button:hover {
+        background-color: #0056b3;
+    }
+    
+</style>
+
+<script>document.addEventListener('DOMContentLoaded', function() {
+    const togglePassword = document.querySelector('.toggle-password');
+    const passwordInput = document.getElementById('password');
+
+    togglePassword.addEventListener('click', function() {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        this.classList.toggle('fa-eye-slash');
+    });
+});
+</script>
+</body>
+</html>

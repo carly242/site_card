@@ -1,0 +1,299 @@
+
+{% load static %}
+
+{% block content %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
+    <title>W.01</title>
+</head>
+<body>
+    <div class="card">
+        <div class="header">
+            <img src="{% if user_profile.photo %}{{ user_profile.photo.url }}{% else %}{% static 'image/User.png' %}{% endif %}">
+            <h3>{{ user_profile.name |default:"Your Name"}}</h3>
+            <p>{{ user_profile.function |default:"Function"}}</p>
+        </div>
+        <div class="body">
+            <ul>
+                
+                <li>
+                    <h3> {{ user_profile.phone_number|default:"Your Moblie Number" }}</h3>
+                    <p>Numero Mobile</p>
+                    <i class="fas fa-mobile-alt"></i>
+
+                </li>
+                <li>
+                    <h3> {{ user_profile.office_number|default:"None" }}</h3>
+                    <p>Numero Bureau</p>
+                    <i class="fas fa-mobile-alt"></i>
+
+                </li>
+                <li>
+                    <h3>{{ user_profile.email |default:"None"}}</h3>
+                    <p>Email Mobile</p>
+                    <i class="fas fa-envelope"></i>
+                </li>
+                <li>
+                    <h3>{{ user_profile.email_bureau |default:"None"}}</h3>
+                    <p>Email Bureau</p>
+                    <i class="fas fa-envelope"></i>
+                </li>
+                <li>
+                    <h3>{{ user_profile.city |default:"None"}}</h3>
+                    <p>Adresse</p>
+                    <a href="{{ user_profile.adress_link |default_if_none:'#' |safe }}" class="lien"><i class="fas fa-map-marker-alt"></i></a>
+                </li>
+                <li>
+                    <h3>{{ user_profile.website |default:"None"}}</h3> 
+                    <p>Site web</p>
+                    <i class="fas fa-globe-americas"></i>
+                </li>
+            </ul>
+        </div>
+        <div class="footer">
+            <ul>
+                <li>
+                    <a href="{% url 'modifier'   %}" class="lien"><i class="fas fa-pen"></i></a>
+                </li>
+                <li>
+                    <a href="{% url 'dowload' user_profile.slug  %}" class="lien"><i class="fas fa-download"></i></a>
+                </li>
+                <li>
+                    <a href="{% url 'checkmenu' %}" class="link"><i class="fas fa-chevron-right"></i></a>
+                </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    <style>
+        
+            body{
+                background: rgb(66, 116, 216); 
+                background: -webkit-linear-gradient(to right, #4977e2, #5f83e5); 
+                background: linear-gradient(to right, #678ded, #656be6); 
+            }
+
+            .card {
+                position: relative;
+                height: 570px;
+                width: 370px;
+                background-color: #fff;
+                margin: 100px auto;
+                border-radius: 12px;
+                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            }
+
+            .header {
+                position: absolute;
+                height: 250px;
+                width: 95%;
+                margin:0 auto;
+                left: 0;
+                right: 0;
+                top: -10px;
+                border-radius: 12px;
+                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+                background-image: linear-gradient(to right, #5a77d9, #3a3af1);
+            }
+
+            .header img {
+                position: absolute;
+                height: 150px;
+                width: 150px;
+                border-radius: 50%; /* Applique un effet de cercle */
+                left: 90px;
+                top: 5px;
+                object-fit: cover; /* Assure que l'image couvre la totalité du cercle */
+            }
+
+            .header h3 {
+                position: absolute;
+                font-family: sans-serif;
+                color: white;
+                font-size: 26px;
+                font-weight: 600;
+                letter-spacing: 1px;
+                top: 140px;
+                left: 45px;
+            }
+
+            .header p {
+                position: absolute;
+                font-family: sans-serif;
+                color: rgb(236, 233, 233);
+                font-size: 16px;
+                top: 205px;
+                left: 120px
+            }
+
+            .body {
+                position: absolute;
+                height: 126px;
+                left: 35px;
+                right: 5px;
+                top: 57%;
+                border-radius: 12px;
+            }
+
+            .body ul {
+                position: relative;
+            }
+            
+            .body ul li {
+                position: absolute;
+                list-style: none;
+                display: block;
+                height: 40px;
+                width: 100%;
+                left: 0;
+                right: 0;
+                border-radius: 12px;
+                background-color: transparent;
+                transition: all .3s ease-in-out;
+            }
+            
+            .body ul li h3,
+            .body ul li p,
+            .body ul li i {
+                position: absolute;
+            }
+            
+            .body ul li h3 {
+                top: -65px;
+                left: 58px;
+                color: rgba(0, 0, 0, 0.886);
+            }
+            
+            .body ul li p {
+                top: -37px;
+                left: 59px;
+                font-size: 12px;
+                font-family: sans-serif;
+                color: rgba(0, 0, 0, 0.886);
+            }
+            
+            .body ul li i {
+                left: 8px;
+                top: -44px;
+                color: rgba(0, 0, 0, 0.886);
+                font-size: 26px;
+            }
+            
+            .body ul li:nth-child(1) {
+                top: -16px;
+            }
+            
+            .body ul li:nth-child(2) {
+                top: 26px;
+            }
+            
+            .body ul li:nth-child(3) {
+                top: 68px;
+            }
+            
+            .body ul li:nth-child(4) {
+                top: 110px;
+            }
+            
+            .body ul li:nth-child(5) {
+                top: 152px;
+            }
+            
+            .body ul li:nth-child(6) {
+                top: 194px;
+            }
+            
+            
+            .footer {
+                position: absolute;
+                height: 80px;
+                bottom: -50px;
+                left: 0;
+                right: 0;
+                border-radius: 12px;
+                width:95%;
+                margin: 0 auto;
+                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+                background-image: linear-gradient(to right, #5a77d9, #3a3af1);
+            }
+            
+            .footer ul {
+                position: absolute;
+                left: -60px;
+            }
+            
+            .footer ul li {
+                display: inline-block;
+                margin-left: 60px;
+            }
+            
+            .footer ul li i {
+                font-size: 30px;
+                color: #000;
+                transition: all .3s ease-in;
+            }
+            
+            .footer ul li:hover i {
+                transform: scale(0.9);
+                color: #fff;
+                cursor: pointer;
+            }
+            
+            .credit a{
+                text-decoration: none;
+                color: #fff;   
+            }
+            
+            .credit{
+                text-align: center;
+            }
+            
+    </style>
+
+
+
+    
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var saveProfileButton = document.getElementById('save-profile-button');
+        saveProfileButton.addEventListener('click', function() {
+            // Création des données vCard
+            var vCardData = 'BEGIN:VCARD\n';
+            vCardData += 'VERSION:3.0\n';
+            vCardData += 'FN:' + "{{ user.name }}\n"; // Nom complet
+            vCardData += 'EMAIL:' + "{{ user.email }}\n"; // Email
+            // Ajoutez d'autres champs du profil ici
+    
+            // Fermeture de la vCard
+            vCardData += 'END:VCARD';
+    
+            // Création d'un objet Blob avec les données vCard
+            var blob = new Blob([vCardData], { type: 'text/vcard' });
+    
+            // Création d'un objet URL pour le Blob
+            var url = window.URL.createObjectURL(blob);
+    
+            // Création d'un lien de téléchargement pour le fichier vCard
+            var downloadLink = document.createElement('a');
+            downloadLink.href = url;
+            downloadLink.download = 'contact.vcf';
+    
+            // Cliquez automatiquement sur le lien de téléchargement pour démarrer le téléchargement
+            downloadLink.click();
+    
+            // Libération de l'URL de l'objet Blob
+            window.URL.revokeObjectURL(url);
+        });
+    });
+    </script>
+
+</body>
+</html>
+
+
+{% endblock content %}

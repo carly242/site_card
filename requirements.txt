@@ -1,0 +1,6 @@
+dj_database_url
+django-environ
+gunicorn
+psycopg2
+pillow
+whitenoise==6.6.0

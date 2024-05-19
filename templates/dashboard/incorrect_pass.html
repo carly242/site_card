@@ -1,0 +1,50 @@
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enter Password</title>
+</head>
+<body>
+
+<div class="container">
+    <h2>Le mot de passe est incorrect!</h2>
+    <a href="{% url 'password_reset' %}">Mot de passe oublié ?</a>
+    <p class="mb-1"><a href="{% url 'testify' %}"><button type="button" class="btn btn-secondary">Restour</button></a></p>
+    
+</div>
+
+<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+    }
+    
+    .container {
+        max-width: 400px;
+        margin: 50px auto;
+        padding: 20px;
+        background: #fff;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    h2 {
+        font-size: 24px;
+        margin-bottom: 20px;
+        color: #333;
+    }
+    
+    p {
+        margin-bottom: 20px;
+        color: #666;
+    }
+    
+    
+</style>
+
+
+</body>
+</html>
