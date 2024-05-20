@@ -156,21 +156,18 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 AUTH_USER_MODEL = 'website.User'
+
 MEDIA_URL = '/media/'
 STATIC_URL = '/static/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-
 if DEBUG:
-
     STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-
 else:
-
     STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 
 # Répertoires où Django recherche des fichiers statiques supplémentaires pendant le développement
 
