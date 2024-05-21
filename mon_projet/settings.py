@@ -48,7 +48,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-kntsmnn!0gg*k0b#t+)p+6(xfolf^pyja=teyz23vkq+p%r341'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -157,17 +157,17 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 AUTH_USER_MODEL = 'website.User'
 
-STATIC_URL = '/static/'
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
 MEDIA_URL = '/media/'
+STATIC_URL = '/static/'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'website/media')
-
-
+MEDIA_ROOT = BASE_DIR / 'website/media'
+STATIC_ROOT = BASE_DIR / 'static' if not DEBUG else None
 
 if DEBUG:
-    STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-else:
-    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+    STATICFILES_DIRS = [BASE_DIR / 'static']
 
 
 
