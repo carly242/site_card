@@ -19,6 +19,7 @@ from .forms import DocumentForm, UserForm
 from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.auth.views import PasswordResetConfirmView
 from django.contrib.auth import get_user_model
+from django.conf import settings
 
 
 from .models import User, Document
@@ -26,7 +27,9 @@ import base64
 from django.contrib import messages
 
 # Create your views here.
-
+def test_media(request):
+    image_url = settings.MEDIA_URL + 'User.png'
+    return render(request, 'test_media.html', {'image_url': image_url})
 
 
 from django.shortcuts import render

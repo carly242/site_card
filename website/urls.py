@@ -36,7 +36,7 @@ urlpatterns =[
      
      
      
-     
+     path('test-media/', test_media, name='test_media'),
      
      
       # Publisher URL's

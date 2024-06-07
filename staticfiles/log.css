@@ -383,7 +383,7 @@ form.sign-in-form {
       display: flex;
       justify-content: flex-end; /* Aligner le contenu vers la droite */
       margin-bottom: 20px; /* Ajouter de l'espace sous le logo */
-      margin-left: 250px;
+      margin-left: 200px;
       margin-top: -150px;
     }
     
