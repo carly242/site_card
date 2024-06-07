@@ -255,7 +255,7 @@ def check_password_for_fonctionnalite(request):
             # Afficher un message d'erreur si le mot de passe est incorrect
             return render(request, 'dashboard/incorrect_pass.html')
     elif request.method == 'GET':
-        return render(request, 'dashboard/check_password.html')
+        return render(request, 'dashboard/checkpass.html')
     else:
         return HttpResponseNotAllowed(['POST', 'GET'])
     
@@ -273,7 +273,7 @@ def check_password_for_menu(request):
             # Afficher un message d'erreur si le mot de passe est incorrect
             return render(request, 'dashboard/incorrect_pass.html')
     elif request.method == 'GET':
-        return render(request, 'dashboard/check_password.html')
+        return render(request, 'dashboard/check_menu.html')
     else:
         return HttpResponseNotAllowed(['POST', 'GET'])
 
