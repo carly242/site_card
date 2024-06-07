@@ -248,17 +248,16 @@ def login_or_functions(request):
 def check_password_for_fonctionnalite(request):
     if request.method == 'POST':
         entered_password = request.POST.get('password')
-        user = request.user
+        user = request.user  # Utilisateur actuellement connecté
         if user.check_password(entered_password):
-            if user == request.user:
-
-             return redirect('edit_profile')  # Redirige vers les fonctionnalités supplémentaires si le mot de passe est correct
+            return redirect('edit_profile')  # Redirige vers les fonctionnalités supplémentaires si le mot de passe est correct
         else:
             # Afficher un message d'erreur si le mot de passe est incorrect
             return render(request, 'dashboard/incorrect_pass.html')
+    elif request.method == 'GET':
+        return render(request, 'dashboard/check_password.html')
     else:
-        # Si la méthode de la requête n'est pas POST, renvoyer une réponse HTTP 405 Method Not Allowed
-        return HttpResponseNotAllowed(['POST'])
+        return HttpResponseNotAllowed(['POST', 'GET'])
     
 
 
@@ -267,20 +266,17 @@ def check_password_for_fonctionnalite(request):
 def check_password_for_menu(request):
     if request.method == 'POST':
         entered_password = request.POST.get('password')
-        user = request.user
+        user = request.user  # Utilisateur actuellement connecté
         if user.check_password(entered_password):
-            if user == request.user:
-
-             return redirect('menu')  # Redirige vers les fonctionnalités supplémentaires si le mot de passe est correct
+            return redirect('menu')  # Redirige vers les fonctionnalités supplémentaires si le mot de passe est correct
         else:
             # Afficher un message d'erreur si le mot de passe est incorrect
             return render(request, 'dashboard/incorrect_pass.html')
     elif request.method == 'GET':
-        # Si la requête est de type GET, retournez simplement le formulaire pour entrer le mot de passe
-        return render(request, 'dashboard/check_menu.html')
+        return render(request, 'dashboard/check_password.html')
     else:
-        # Si la requête n'est ni de type POST ni de type GET, retournez une réponse HTTP 405 Méthode non autorisée
         return HttpResponseNotAllowed(['POST', 'GET'])
+
 
 
 
