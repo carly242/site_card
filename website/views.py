@@ -37,8 +37,12 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 import base64
+import base64
+from django.shortcuts import get_object_or_404
+from django.http import HttpResponse
+from .models import User
 
-
+@login_required
 def download_vcard(request, slug):
     # Obtenir les informations du profil
     user_profile = get_object_or_404(User, slug=slug)
@@ -52,15 +56,22 @@ def download_vcard(request, slug):
     vcard_data += 'TEL;TYPE=CELL:' + user_profile.phone_number + '\n'  # Numéro de téléphone mobile
     vcard_data += 'TEL;TYPE=WORK:' + user_profile.office_number + '\n'  # Numéro de téléphone bureau
 
+    # Ajoutez la photo si elle existe
     try:
-        if user_profile.photo and hasattr(user_profile.photo, 'file'):
-            # Si l'utilisateur a une photo, lisez-la et encodez-la en base64
-            photo_data = user_profile.photo.read()
-            photo_base64 = base64.b64encode(photo_data).decode('utf-8')
-            photo_content_type = 'image/jpeg'  # Remplacez par le type de contenu approprié
-            vcard_data += 'PHOTO;ENCODING=BASE64;TYPE=' + photo_content_type + ':\n'
-            vcard_data += photo_base64 + '\n'  # Photo
+        if user_profile.photo:
+            print(f"Photo path: {user_profile.photo.path}")  # Log pour vérifier le chemin de la photo
+            # Ouvrir le fichier de la photo
+            with open(user_profile.photo.path, 'rb') as photo_file:
+                photo_data = photo_file.read()
+                photo_base64 = base64.b64encode(photo_data).decode('utf-8')
+                photo_content_type = 'JPEG'  # Remplacez par le type de contenu approprié
+                vcard_data += 'PHOTO;ENCODING=b;TYPE=' + photo_content_type + ':\n '  # Notez l'espace après '\n' pour un encodage correct
+                vcard_data += photo_base64 + '\n'  # Photo
+                print("Photo ajoutée à la vCard")  # Log pour vérifier si la photo a été ajoutée
+        else:
+            print("L'utilisateur n'a pas de photo")  # Log si l'utilisateur n'a pas de photo
     except FileNotFoundError:
+        print("Fichier photo non trouvé")  # Log si le fichier photo n'est pas trouvé
         pass  # Si le fichier photo n'est pas trouvé, continuez sans ajouter de photo à la vCard
 
     # Ajoutez le reste des champs et fermez la vCard
