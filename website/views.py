@@ -6,7 +6,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.hashers import make_password
 from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, HttpResponseNotAllowed
+from django.http import HttpResponse, HttpResponseNotAllowed, JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import  ListView, UpdateView, DeleteView, CreateView
 from django.views import generic
@@ -15,7 +15,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 from django.urls import reverse, reverse_lazy
-from .forms import DocumentForm, UserForm
+from .forms import ContactForm, DocumentForm, UserForm
 from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.auth.views import PasswordResetConfirmView
 from django.contrib.auth import get_user_model
@@ -440,7 +440,26 @@ class AeditView(LoginRequiredMixin, UpdateView):
 
 @login_required
 def Menu(request):
-	return render(request, 'dashboard/menu.html')
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            email = form.cleaned_data['email']
+            message = form.cleaned_data['message']
+            # Envoyer un email
+            send_mail(
+                f"Message de {name} via le formulaire de contact",
+                message,
+                email,
+                ['w.01infocontact@gmail.com'],  # Remplacez par votre adresse e-mail
+            )
+            messages.success(request, 'Message Envoyé')
+        else:
+            return JsonResponse({'success': False, 'errors': form.errors})
+    else:
+        form = ContactForm()
+        return render(request, 'dashboard/menu.html', {'form': form})
+	
 
 
 def login_or_menu(request):
@@ -582,3 +601,27 @@ class ADeleteUser(SuccessMessageMixin, DeleteView):
     template_name='admin/delete_user.html'
     success_url = reverse_lazy('wluser')
     success_message = "Data successfully deleted"
+    
+    
+from django.core.mail import send_mail
+    
+def contact(request):
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            email = form.cleaned_data['email']
+            message = form.cleaned_data['message']
+            # Envoyer un email
+            send_mail(
+                f"Message de {name} via le formulaire de contact",
+                message,
+                email,
+                ['w.01infocontact@gmail.com'],  # Remplacez par votre adresse e-mail
+            )
+            return JsonResponse({'success': True, 'message': 'Votre message a été envoyé avec succès.'})
+        else:
+            return JsonResponse({'success': False, 'errors': form.errors})
+    else:
+        form = ContactForm()
+        return render(request, 'dashboard/menu.html', {'form': form})

@@ -38,8 +38,7 @@ environ.Env.read_env()
 # Utiliser les variables d'environnement dans vos paramètres Django
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # Quick-start development settings - unsuitable for production
@@ -63,8 +62,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'crispy_forms',
+    'crispy_bootstrap4',
     'website'
 ]
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -75,8 +78,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
 
 ]
+
+
 
 ROOT_URLCONF = 'mon_projet.urls'
 
@@ -108,7 +114,7 @@ WSGI_APPLICATION = 'mon_projet.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'w01',
+        'NAME': 'wsite',
         'HOST': '127.0.0.1',
         'PORT': '3306',
         'USER': 'root',
@@ -157,21 +163,18 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 AUTH_USER_MODEL = 'website.User'
-MEDIA_URL = '/media/'
-STATIC_URL = '/static/'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR /'website/media')
+
 
 
 if DEBUG:
-
-    STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-
+    STATICFILES_DIRS = [os.path.join(BASE_DIR / 'static')]
 else:
-
-    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+    STATIC_ROOT = os.path.join(BASE_DIR / 'static')
 
 
 
@@ -188,3 +191,21 @@ LOGIN_URL = 'home'
 
 PROTOCOL = 'http'
 DOMAIN = '127.0.0.1:1000'
+
+
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        },
+        'OAUTH_PKCE_ENABLED': True,
+    }
+}
+
+SOCIAL_AUTH_GOOGLE_CLIENT_ID = '368034511242-3a6k19ngbjtebhsfo3usamgf49k2ar4p.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_SECRET = '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'
