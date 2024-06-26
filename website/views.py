@@ -205,25 +205,21 @@ def edit_profile(request):
         form = UserForm(request.POST, request.FILES, instance=user_profile)
         if form.is_valid():
             form.save()
-        return redirect('profile', slug=user_profile.slug)
+            return redirect('profile', slug=user_profile.slug)
     else:
-        # Utilisez la méthode initial du formulaire pour définir les valeurs par défaut
         initial_data = {
             'name': user_profile.name if user_profile.name else 'Your Name',
             'function': user_profile.function if user_profile.function else 'Function',
             'email': user_profile.email if user_profile.email else 'Email',
             'email_bureau': user_profile.email_bureau if user_profile.email_bureau else 'Office Email',
-            'city': user_profile.city if user_profile.city else 'adress',
+            'city': user_profile.city if user_profile.city else 'City',
             'adress_link': user_profile.adress_link if user_profile.adress_link else '#',
             'phone_number': user_profile.phone_number if user_profile.phone_number else 'Phone Number',
             'office_number': user_profile.office_number if user_profile.office_number else 'Office Number',
             'website': user_profile.website if user_profile.website else 'Website',
-            # Ajoutez d'autres champs ici avec leurs valeurs par défaut
         }
         form = UserForm(instance=user_profile, initial=initial_data)
     return render(request, 'dashboard/edit_profil.html', {'form': form})
-
-
 
 
 
@@ -614,9 +610,9 @@ def contact(request):
             message = form.cleaned_data['message']
             # Envoyer un email
             send_mail(
-                f"Message de {name} via le formulaire de contact",
+                f"Message de {name} via le formulaire de contact par l'eamil {email}",
                 message,
-                email,
+                email, 
                 ['w.01infocontact@gmail.com'],  # Remplacez par votre adresse e-mail
             )
             return JsonResponse({'success': True, 'message': 'Votre message a été envoyé avec succès.'})
@@ -624,4 +620,4 @@ def contact(request):
             return JsonResponse({'success': False, 'errors': form.errors})
     else:
         form = ContactForm()
-        return render(request, 'dashboard/menu.html', {'form': form})
+        return render(request, 'dashboard/menu.html', {'form': form}) 
