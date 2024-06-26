@@ -51,7 +51,10 @@
                     {{ form|crispy }}
                     <div id="map" class="map-container"></div>
                     <input type="hidden" id="id_adress_link" name="adress_link">
-                    <button type="submit" class="btn btn-primary mt-3">Save Changes</button>
+                    <div class="d-flex justify-content-between mt-3">
+                        <a href="{% url 'profile' user.slug %}" class="btn btn-secondary">Retour au Profil</a>
+                        <button type="submit" class="btn btn-primary">Sauvegarder</button>
+                    </div>
                 </form>
             </div>
         </div>
