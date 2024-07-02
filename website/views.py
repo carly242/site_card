@@ -42,7 +42,7 @@ from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 from .models import User
 
-@login_required
+
 def download_vcard(request, slug):
     # Obtenir les informations du profil
     user_profile = get_object_or_404(User, slug=slug)
@@ -160,23 +160,28 @@ from django.urls import reverse
 
     
         
-
+from django.views.decorators.csrf import csrf_exempt
     # Renvoyez ces valeurs dans le contexte de votre template
 
+@csrf_exempt
 def view_profile(request, slug=None):
     if slug is not None:
         user_profile = get_object_or_404(User, slug=slug)
     else:
-        # Si aucun slug n'est fourni, vous pouvez fournir un comportement alternatif ici,
-        # comme récupérer le profil de l'utilisateur actuellement connecté.
-        # Par exemple, si vous stockez l'utilisateur connecté dans la session :
-        user_profile = request.session.get('current_user_profile', None)
-        if user_profile is None:
-            # Gérer le cas où aucun utilisateur n'est connecté ou s'il n'y a pas de profil enregistré dans la session
-            return redirect(reverse('home'))  # Rediriger vers la page de connexion par exemple
+        user_profile = request.user  # Utiliser le profil de l'utilisateur connecté
 
-    return render(request, 'dashboard/index.html', {'user_profile': user_profile})
+    if request.method == 'POST' and request.is_ajax():
+        form = UserForm(request.POST, request.FILES, instance=user_profile)
+        if form.is_valid():
+            form.save()
+            return JsonResponse({'success': True})
+        else:
+            errors = form.errors.as_json()
+            return JsonResponse({'success': False, 'errors': errors})
+    else:
+        form = UserForm(instance=user_profile)
 
+    return render(request, 'dashboard/index.html', {'user_profile': user_profile, 'form': form})
 
 
 
@@ -199,30 +204,20 @@ from django.shortcuts import get_object_or_404, render
 from .models import User
 
 @login_required
-def edit_profile(request):
-    user_profile = request.user
+def update_profile(request, slug):
+    user_profile = get_object_or_404(User, slug=slug)
+    
     if request.method == 'POST':
         form = UserForm(request.POST, request.FILES, instance=user_profile)
         if form.is_valid():
-            form.save()
-        return redirect('profile', slug=user_profile.slug)
-    else:
-        # Utilisez la méthode initial du formulaire pour définir les valeurs par défaut
-        initial_data = {
-            'name': user_profile.name if user_profile.name else 'Your Name',
-            'function': user_profile.function if user_profile.function else 'Function',
-            'email': user_profile.email if user_profile.email else 'Email',
-            'email_bureau': user_profile.email_bureau if user_profile.email_bureau else 'Office Email',
-            'city': user_profile.city if user_profile.city else 'adress',
-            'adress_link': user_profile.adress_link if user_profile.adress_link else '#',
-            'phone_number': user_profile.phone_number if user_profile.phone_number else 'Phone Number',
-            'office_number': user_profile.office_number if user_profile.office_number else 'Office Number',
-            'website': user_profile.website if user_profile.website else 'Website',
-            # Ajoutez d'autres champs ici avec leurs valeurs par défaut
-        }
-        form = UserForm(instance=user_profile, initial=initial_data)
-    return render(request, 'dashboard/edit_profil.html', {'form': form})
-
+            form.save()  # Enregistre les modifications dans la base de données, y compris la photo de profil
+            return redirect('profile', slug=slug)  # Redirige vers la vue de profil après la mise à jour
+        else:
+            errors = form.errors.as_json()
+            return JsonResponse({'success': False, 'errors': errors})
+    
+    # Gérer la requête GET ou d'autres cas
+    return JsonResponse({'success': False, 'errors': 'Méthode invalide'})
 
 
 

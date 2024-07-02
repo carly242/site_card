@@ -18,6 +18,7 @@ from django.utils.text import slugify
 from django.urls import reverse
 
 
+
 class User(AbstractUser):
     is_admin = models.BooleanField(default=False)
     is_client = models.BooleanField(default=False)
@@ -31,6 +32,11 @@ class User(AbstractUser):
     phone_number = models.CharField(max_length=100, null=True, default="Phone Number")
     office_number = models.CharField(max_length=100, null=True, default="Office Number")
     website = models.CharField(max_length=500, blank=True, null=True, default="Website")
+    entreprise = models.CharField(max_length=100, null=True, default="entreprise")
+    facebook = models.CharField(max_length=255, null=True, blank=True)
+    twitter = models.CharField(max_length=255, null=True, blank=True)
+    linkedin = models.CharField(max_length=255, null=True, blank=True)
+    instagram = models.CharField(max_length=255, null=True, blank=True)
     slug = models.SlugField(unique=True, blank=True)
 
     def save(self, *args, **kwargs):

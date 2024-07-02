@@ -9,17 +9,22 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 
 
-
 class UserForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['name', 'function', 'email', 'email_bureau', 'office_number', 'phone_number', 'city', 'adress_link', 'photo', 'website']
+        fields = ['name', 'function', 'email', 'email_bureau', 'office_number', 'phone_number', 'city', 'adress_link', 'photo', 'website', 'facebook', 'twitter', 'linkedin', 'instagram', 'entreprise']
 
     def __init__(self, *args, **kwargs):
         super(UserForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_method = 'post'
         self.helper.add_input(Submit('submit', 'Save Changes'))
+
+        for field in self.fields.values():
+            field.required = False
+
+
+        
 class DocumentForm(forms.ModelForm):
     class Meta:
         model = Document
