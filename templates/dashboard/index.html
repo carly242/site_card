@@ -41,7 +41,7 @@
             height: 150px;
             border-radius: 50%;
             overflow: hidden;
-            margin-right: 20px;
+            margin: 20px auto;
             position: relative;
         }
         .profile-picture {
@@ -305,11 +305,13 @@
             reader.onload = function() {
                 const preview = document.getElementById('profile-picture-preview');
                 preview.src = reader.result;
-                profilePictureFileHidden.files = event.target.files;
-                editProfilePictureForm.submit();
             };
             reader.readAsDataURL(event.target.files[0]);
         }
+    
+        document.getElementById('edit-profile-picture-icon').addEventListener('click', function() {
+            document.getElementById('profile-picture-file').click();
+        });
 
         editProfileNameIcon.addEventListener('click', () => {
             toggleFormVisibility(editProfileNameForm);
