@@ -179,6 +179,21 @@
             padding: 10px;
             border-radius: 5px;
         }
+        
+        #save-profile-picture {
+            background-color: #3b5998;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            position: absolute;
+            top: 120px; /* Ajustez cette valeur pour l'aligner verticalement */
+            right: -10px; /* Ajustez cette valeur pour contrôler la distance à droite */
+            display: none; /* Cacher le bouton par défaut */
+        }
+        
+        
     </style>
 </head>
 <body>
@@ -189,16 +204,18 @@
                 <img src="{% if user_profile.photo %}{{ user_profile.photo.url }}{% else %}{% static 'image/User.png' %}{% endif %}" alt="Profile Picture" class="profile-picture" id="profile-picture-preview">
                 {% if user.is_authenticated %}
                 <label for="profile-picture-file" class="fas fa-camera profile-picture-edit" id="edit-profile-picture-icon"></label>
-                <input type="file" name="photo" id="profile-picture-file" style="display: none;" onchange="previewProfilePicture(event)">
+                <input type="file" name="photo" id="profile-picture-file" onchange="previewProfilePicture(event)">
+                <button id="save-profile-picture">Save</button> <!-- Le bouton "Save" est initialement caché -->
                 {% endif %}
             </div>
             {% if user.is_authenticated %}
             <form id="edit-profile-picture-form" style="display:none;" action="{% url 'edit_profile' user.slug %}" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 <input type="file" name="photo" id="profile-picture-file-hidden" style="display: none;">
-                <button type="submit">Save</button>
+                <button type="submit" id="submit-profile-picture">Save</button>
             </form>
-            {% endif %}
+            {% endif %}    
+            
             <div>
                 <h1>
                     {{ user_profile.name | default:"Your Name" }}
@@ -239,113 +256,151 @@
                     <li><i class="fas fa-globe"></i> <a href="{{ user_profile.website }}">{{ user_profile.website }}</a></li>
                 </ul>
                 {% if user.is_authenticated %}
-                <form id="edit-contact-info-form" class="edit-form" action="{% url 'edit_profile' user.slug %}" method="POST" enctype="multipart/form-data">
+                <form id="edit-contact-info-form" class="edit-form" action="{% url 'edit_profile' user.slug %}" method="POST">
                     {% csrf_token %}
-                    <input type="text" name="phone_number" value="{{ user_profile.phone_number }}" placeholder="Your Mobile Number">
-                    <input type="email" name="email" value="{{ user_profile.email }}" placeholder="Your Email">
-                    <input type="text" name="city" value="{{ user_profile.city }}" placeholder="Your City">
-                    <input type="text" name="entreprise" value="{{ user_profile.entreprise }}" placeholder="Your Company">
-                    <input type="url" name="website" value="{{ user_profile.website }}" placeholder="Your Website">
+                    <input type="text" name="phone_number" value="{{ user_profile.phone_number }}" placeholder="Phone Number">
+                    <input type="email" name="email" value="{{ user_profile.email }}" placeholder="Email">
+                    <input type="text" name="city" value="{{ user_profile.city }}" placeholder="City">
+                    <input type="text" name="entreprise" value="{{ user_profile.entreprise }}" placeholder="Company">
+                    <input type="text" name="website" value="{{ user_profile.website }}" placeholder="Website">
                     <button type="submit">Save</button>
                 </form>
                 {% endif %}
             </div>
             <div>
-                <h2>Social Networks {% if user.is_authenticated %}<i class="fas fa-pen edit-icon" id="edit-social-networks-icon"></i>{% endif %}</h2>
+                <h2>Social Links {% if user.is_authenticated %}<i class="fas fa-pen edit-icon" id="edit-social-links-icon"></i>{% endif %}</h2>
                 <ul class="info-list">
-                    <li><i class="fab fa-facebook"></i> <a href="{{ user_profile.facebook }}">{{ user_profile.facebook }}</a></li>
-                    <li><i class="fab fa-twitter"></i> <a href="{{ user_profile.twitter }}">{{ user_profile.twitter }}</a></li>
-                    <li><i class="fab fa-linkedin"></i> <a href="{{ user_profile.linkedin }}">{{ user_profile.linkedin }}</a></li>
-                    <li><i class="fab fa-instagram"></i> <a href="{{ user_profile.instagram }}">{{ user_profile.instagram }}</a></li>
+                    <li><i class="fab fa-facebook"></i> <a href="{{ user_profile.facebook_link }}">{{ user_profile.facebook_link }}</a></li>
+                    <li><i class="fab fa-twitter"></i> <a href="{{ user_profile.twitter_link }}">{{ user_profile.twitter_link }}</a></li>
+                    <li><i class="fab fa-linkedin"></i> <a href="{{ user_profile.linkedin_link }}">{{ user_profile.linkedin_link }}</a></li>
+                    <li><i class="fab fa-instagram"></i> <a href="{{ user_profile.instagram_link }}">{{ user_profile.instagram_link }}</a></li>
                 </ul>
                 {% if user.is_authenticated %}
-                <form id="edit-social-networks-form" class="edit-form" action="{% url 'edit_profile' user.slug %}" method="POST" enctype="multipart/form-data">
+                <form id="edit-social-links-form" class="edit-form" action="{% url 'edit_profile' user.slug %}" method="POST">
                     {% csrf_token %}
-                    <input type="url" name="facebook" value="{{ user_profile.facebook }}" placeholder="Facebook URL">
-                    <input type="url" name="twitter" value="{{ user_profile.twitter }}" placeholder="Twitter URL">
-                    <input type="url" name="linkedin" value="{{ user_profile.linkedin }}" placeholder="LinkedIn URL">
-                    <input type="url" name="instagram" value="{{ user_profile.instagram }}" placeholder="Instagram URL">
+                    <input type="text" name="facebook_link" value="{{ user_profile.facebook_link }}" placeholder="Facebook URL">
+                    <input type="text" name="twitter_link" value="{{ user_profile.twitter_link }}" placeholder="Twitter URL">
+                    <input type="text" name="linkedin_link" value="{{ user_profile.linkedin_link }}" placeholder="LinkedIn URL">
+                    <input type="text" name="instagram_link" value="{{ user_profile.instagram_link }}" placeholder="Instagram URL">
                     <button type="submit">Save</button>
                 </form>
                 {% endif %}
             </div>
+            <div>
+                <h2>About Me {% if user.is_authenticated %}<i class="fas fa-pen edit-icon" id="edit-about-me-icon"></i>{% endif %}</h2>
+                <ul class="info-list">
+                    <li>{{ user_profile.about_me | default:"A short description about yourself." }}</li>
+                </ul>
+                {% if user.is_authenticated %}
+                <form id="edit-about-me-form" class="edit-form" action="{% url 'edit_profile' user.slug %}" method="POST">
+                    {% csrf_token %}
+                    <textarea name="about_me" placeholder="About Me">{{ user_profile.about_me }}</textarea>
+                    <button type="submit">Save</button>
+                </form>
+                {% endif %}
+            </div>
+            <div>
+                <h2>Skills {% if user.is_authenticated %}<i class="fas fa-pen edit-icon" id="edit-skills-icon"></i>{% endif %}</h2>
+                <ul class="info-list">
+                    <li>{{ user_profile.skills | default:"Your skills." }}</li>
+                </ul>
+                {% if user.is_authenticated %}
+                <form id="edit-skills-form" class="edit-form" action="{% url 'edit_profile' user.slug %}" method="POST">
+                    {% csrf_token %}
+                    <textarea name="skills" placeholder="Skills">{{ user_profile.skills }}</textarea>
+                    <button type="submit">Save</button>
+                </form>
+                {% endif %}
+            </div>
+            <div class="custom-fields">
+                <h2>Custom Fields {% if user.is_authenticated %}<i class="fas fa-pen edit-icon" id="edit-custom-fields-icon"></i>{% endif %}</h2>
+                {% for field in user_profile.custom_fields.all %}
+                <div>
+                    <label>{{ field.label }}</label>
+                    <p>{{ field.value }}</p>
+                </div>
+                {% endfor %}
+                {% if user.is_authenticated %}
+                <form id="edit-custom-fields-form" class="edit-form" action="{% url 'edit_profile' user.slug %}" method="POST">
+                    {% csrf_token %}
+                    {% for field in user_profile.custom_fields.all %}
+                    <input type="text" name="custom_fields[{{ field.id }}][label]" value="{{ field.label }}">
+                    <input type="text" name="custom_fields[{{ field.id }}][value]" value="{{ field.value }}">
+                    {% endfor %}
+                    <button type="submit">Save</button>
+                </form>
+                <button class="add-field-btn">Add Field</button>
+                {% endif %}
+            </div>
+        </div>
+        <div class="profile-footer">
+            <a href="{% url 'dowload' user_profile.slug %}"><i class="fas fa-download"></i> Download Contact Info</a>
         </div>
         {% if not user.is_authenticated %}
         <div class="login-message">
-            <a href="{% url 'home'  %}">Connectez-Vous Pour modifer votre profil</a>
+            Please <a href="{% url 'connect' %}">log in</a> to edit your profile.
         </div>
         {% endif %}
-        <div class="profile-footer">
-            <a href="{% url 'dowload' user_profile.slug  %}"><i class="fas fa-download"></i>Téléchargé le Contact</a>
-        </div>
-        <div class="profile-footer">
-            <a href="{% url 'menu'  %}"><i class="fas fa-chevron-right"></i> Plus de fonctionnalité</a>
-        </div>
-        
     </div>
     <script>
-        const editProfilePictureIcon = document.getElementById('edit-profile-picture-icon');
-        const editProfilePictureForm = document.getElementById('edit-profile-picture-form');
-        const profilePictureFileHidden = document.getElementById('profile-picture-file-hidden');
-        const editProfileNameIcon = document.getElementById('edit-profile-name-icon');
-        const editProfileNameForm = document.getElementById('edit-profile-name-form');
-        const editProfileFunctionIcon = document.getElementById('edit-profile-function-icon');
-        const editProfileFunctionForm = document.getElementById('edit-profile-function-form');
-        const editContactInfoIcon = document.getElementById('edit-contact-info-icon');
-        const editContactInfoForm = document.getElementById('edit-contact-info-form');
-        const editSocialNetworksIcon = document.getElementById('edit-social-networks-icon');
-        const editSocialNetworksForm = document.getElementById('edit-social-networks-form');
+        // Fonction pour prévisualiser la photo de profil sélectionnée
+            function previewProfilePicture(event) {
+                var input = event.target;
+                var reader = new FileReader();
+                reader.onload = function(){
+                    var dataURL = reader.result;
+                    var preview = document.getElementById('profile-picture-preview');
+                    preview.src = dataURL;
+                    // Afficher le bouton "Save" après avoir sélectionné une nouvelle image
+                    document.getElementById('save-profile-picture').style.display = 'block';
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
 
-        editProfilePictureIcon.addEventListener('click', () => {
-            document.getElementById('profile-picture-file').click();
-        });
+            // Écouteur d'événement pour cliquer sur l'icône d'édition de la photo de profil
+            document.getElementById('edit-profile-picture-icon').addEventListener('click', function() {
+                document.getElementById('profile-picture-file').click();
+            });
 
-        function previewProfilePicture(event) {
-            const reader = new FileReader();
-            reader.onload = function() {
-                const preview = document.getElementById('profile-picture-preview');
-                preview.src = reader.result;
-            };
-            reader.readAsDataURL(event.target.files[0]);
-        }
+            // Écouteur d'événement pour cliquer sur le bouton "Save"
+            document.getElementById('save-profile-picture').addEventListener('click', function() {
+                var fileInput = document.getElementById('profile-picture-file');
+                var hiddenFileInput = document.getElementById('profile-picture-file-hidden');
+                hiddenFileInput.files = fileInput.files;
+                // Cliquer sur le bouton de soumission caché pour déclencher l'envoi du formulaire
+                document.getElementById('submit-profile-picture').click();
+            });
+
     
-        document.getElementById('edit-profile-picture-icon').addEventListener('click', function() {
-            document.getElementById('profile-picture-file').click();
+        // Event listeners to show edit forms when clicking on edit icons
+        const editIcons = document.querySelectorAll('.edit-icon');
+        editIcons.forEach(icon => {
+            icon.addEventListener('click', () => {
+                const formId = icon.id.replace('icon', 'form');
+                console.log('Editing:', formId);
+                document.getElementById(formId).style.display = 'block';
+                
+            });
         });
-
-        editProfileNameIcon.addEventListener('click', () => {
-            toggleFormVisibility(editProfileNameForm);
+    
+        // Event listener to add new custom fields
+        document.querySelector('.add-field-btn').addEventListener('click', () => {
+            const customFieldsForm = document.getElementById('edit-custom-fields-form');
+            const newFieldLabel = document.createElement('input');
+            newFieldLabel.type = 'text';
+            newFieldLabel.name = 'custom_fields[new][label]';
+            newFieldLabel.placeholder = 'Field Label';
+            const newFieldValue = document.createElement('input');
+            newFieldValue.type = 'text';
+            newFieldValue.name = 'custom_fields[new][value]';
+            newFieldValue.placeholder = 'Field Value';
+            customFieldsForm.appendChild(newFieldLabel);
+            customFieldsForm.appendChild(newFieldValue);
+            console.log('Adding new custom field...');
         });
-
-        editProfileFunctionIcon.addEventListener('click', () => {
-            toggleFormVisibility(editProfileFunctionForm);
-        });
-
-        editContactInfoIcon.addEventListener('click', () => {
-            toggleFormVisibility(editContactInfoForm);
-        });
-
-        editSocialNetworksIcon.addEventListener('click', () => {
-            toggleFormVisibility(editSocialNetworksForm);
-        });
-
-        function toggleFormVisibility(form) {
-            form.style.display = form.style.display === 'none' ? 'block' : 'none';
-        }
-
-        function addCustomField() {
-            const listItem = document.createElement('li');
-            const input = document.createElement('input');
-            input.type = 'text';
-            input.placeholder = 'Field Name';
-            const valueInput = document.createElement('input');
-            valueInput.type = 'text';
-            valueInput.placeholder = 'Field Value';
-            listItem.appendChild(input);
-            listItem.appendChild(valueInput);
-            document.getElementById('custom-fields-list').appendChild(listItem);
-        }
     </script>
+    
+    
 </body>
 </html>
 {% endblock %}
