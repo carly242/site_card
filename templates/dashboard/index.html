@@ -193,7 +193,30 @@
             display: none; /* Cacher le bouton par défaut */
         }
         
-        
+        /* Media Queries for Responsive Design */
+        @media (max-width: 768px) {
+            .profile-container {
+                margin: -100px auto 20px auto;
+                padding: 10px;
+            }
+
+            .profile-header {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            #save-profile-picture {
+                top: 100px;
+                right: 10px;
+                padding: 5px 10px;
+                font-size: 14px;
+            }
+
+            .profile-picture-container {
+                width: 100px;
+                height: 100px;
+            }
+        }
     </style>
 </head>
 <body>
