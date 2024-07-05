@@ -180,18 +180,7 @@
             border-radius: 5px;
         }
         
-        #save-profile-picture {
-            background-color: #3b5998;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            border: none;
-            cursor: pointer;
-            position: absolute;
-            top: 120px; /* Ajustez cette valeur pour l'aligner verticalement */
-            right: -10px; /* Ajustez cette valeur pour contrôler la distance à droite */
-            display: none; /* Cacher le bouton par défaut */
-        }
+        
         
         /* Media Queries for Responsive Design */
         @media (max-width: 768px) {
@@ -240,11 +229,10 @@
             {% endif %}    
             
             <div>
+                {% if user.is_authenticated %}<i class="fas fa-pen edit-icon" id="edit-profile-name-icon"></i>{% endif %}
                 <h1>
-                    {{ user_profile.name | default:"Your Name" }}
-                    {% if user.is_authenticated %}
-                    <i class="fas fa-pen edit-icon" id="edit-profile-name-icon"></i>
-                    {% endif %}
+                    {{ user_profile.name | default:"Your Name" }} 
+                   
                 </h1>
                 {% if user.is_authenticated %}
                 <form id="edit-profile-name-form" style="display:none;" action="{% url 'edit_profile' user.slug %}" method="POST" enctype="multipart/form-data">
@@ -267,6 +255,7 @@
                 </form>
                 {% endif %}
             </div>
+            
         </div>
         <div class="profile-info">
             <div>
@@ -309,53 +298,10 @@
                 </form>
                 {% endif %}
             </div>
-            <div>
-                <h2>About Me {% if user.is_authenticated %}<i class="fas fa-pen edit-icon" id="edit-about-me-icon"></i>{% endif %}</h2>
-                <ul class="info-list">
-                    <li>{{ user_profile.about_me | default:"A short description about yourself." }}</li>
-                </ul>
-                {% if user.is_authenticated %}
-                <form id="edit-about-me-form" class="edit-form" action="{% url 'edit_profile' user.slug %}" method="POST">
-                    {% csrf_token %}
-                    <textarea name="about_me" placeholder="About Me">{{ user_profile.about_me }}</textarea>
-                    <button type="submit">Save</button>
-                </form>
-                {% endif %}
-            </div>
-            <div>
-                <h2>Skills {% if user.is_authenticated %}<i class="fas fa-pen edit-icon" id="edit-skills-icon"></i>{% endif %}</h2>
-                <ul class="info-list">
-                    <li>{{ user_profile.skills | default:"Your skills." }}</li>
-                </ul>
-                {% if user.is_authenticated %}
-                <form id="edit-skills-form" class="edit-form" action="{% url 'edit_profile' user.slug %}" method="POST">
-                    {% csrf_token %}
-                    <textarea name="skills" placeholder="Skills">{{ user_profile.skills }}</textarea>
-                    <button type="submit">Save</button>
-                </form>
-                {% endif %}
-            </div>
-            <div class="custom-fields">
-                <h2>Custom Fields {% if user.is_authenticated %}<i class="fas fa-pen edit-icon" id="edit-custom-fields-icon"></i>{% endif %}</h2>
-                {% for field in user_profile.custom_fields.all %}
-                <div>
-                    <label>{{ field.label }}</label>
-                    <p>{{ field.value }}</p>
-                </div>
-                {% endfor %}
-                {% if user.is_authenticated %}
-                <form id="edit-custom-fields-form" class="edit-form" action="{% url 'edit_profile' user.slug %}" method="POST">
-                    {% csrf_token %}
-                    {% for field in user_profile.custom_fields.all %}
-                    <input type="text" name="custom_fields[{{ field.id }}][label]" value="{{ field.label }}">
-                    <input type="text" name="custom_fields[{{ field.id }}][value]" value="{{ field.value }}">
-                    {% endfor %}
-                    <button type="submit">Save</button>
-                </form>
-                <button class="add-field-btn">Add Field</button>
-                {% endif %}
-            </div>
-        </div>
+            
+            
+            
+        
         <div class="profile-footer">
             <a href="{% url 'dowload' user_profile.slug %}"><i class="fas fa-download"></i> Download Contact Info</a>
         </div>
