@@ -78,20 +78,23 @@
     <script>
         function previewProfilePicture(event) {
             var input = event.target;
-            var reader = new FileReader();
-            reader.onload = function(){
-                var dataURL = reader.result;
-                var preview = document.getElementById('profile-picture-preview');
-                preview.src = dataURL;
-                document.getElementById('save-profile-picture').style.display = 'block';
-            };
-            reader.readAsDataURL(input.files[0]);
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(){
+                    var dataURL = reader.result;
+                    var preview = document.getElementById('profile-picture-preview');
+                    preview.src = dataURL;
+                    document.getElementById('save-profile-picture').style.display = 'block';
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
         }
 
-        document.getElementById('edit-profile-picture-icon').addEventListener('click', function() {
-            document.getElementById('profile-picture-file').click();
+        document.getElementById('save-profile-picture').addEventListener('click', function() {
+            document.getElementById('submit-profile-picture').click();
+            return false; // Ajoutez cette ligne pour empêcher le rechargement de la page
         });
-
+        
         document.getElementById('save-profile-picture').addEventListener('click', function() {
             document.getElementById('submit-profile-picture').click();
         });
