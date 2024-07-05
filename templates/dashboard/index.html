@@ -49,7 +49,9 @@
             height: 100%;
             object-fit: cover;
             object-position: center;
+           
         }
+        
         .profile-picture-edit {
             position: absolute;
             bottom: 10px;
@@ -180,32 +182,37 @@
             border-radius: 5px;
         }
         
-        
+        #save-profile-picture {
+            position: absolute;
+            bottom: -20px; /* Ajustez la position verticale selon vos besoins */
+            left: 50%; /* Ajustez la position horizontale selon vos besoins */
+            transform: translateX(-50%);
+            display: none; /* Le bouton "Save" est initialement caché */
+        }
         
         /* Media Queries for Responsive Design */
         @media (max-width: 768px) {
-            .profile-container {
+            .profile-picture-container {
                 margin: -100px auto 20px auto;
                 padding: 10px;
+                width: 100px;
+                height: 100px;
             }
-
+        
             .profile-header {
                 flex-direction: column;
                 align-items: center;
             }
-
+        
             #save-profile-picture {
+                position: absolute;
                 top: 100px;
                 right: 10px;
                 padding: 5px 10px;
                 font-size: 14px;
             }
-
-            .profile-picture-container {
-                width: 100px;
-                height: 100px;
-            }
         }
+        
     </style>
 </head>
 <body>
@@ -213,20 +220,23 @@
     <div class="profile-container">
         <div class="profile-header">
             <div class="profile-picture-container">
-                <img src="{% if user_profile.photo %}{{ user_profile.photo.url }}{% else %}{% static 'image/User.png' %}{% endif %}" alt="Profile Picture" class="profile-picture" id="profile-picture-preview">
-                {% if user.is_authenticated %}
-                <label for="profile-picture-file" class="fas fa-camera profile-picture-edit" id="edit-profile-picture-icon"></label>
-                <input type="file" name="photo" id="profile-picture-file" onchange="previewProfilePicture(event)">
+                <div class="image-container">
+                    <img src="{% if user_profile.photo %}{{ user_profile.photo.url }}{% else %}{% static 'image/User.png' %}{% endif %}" alt="Profile Picture" class="profile-picture" id="profile-picture-preview">
+                    {% if user.is_authenticated %}
+                    <label for="profile-picture-file" class="fas fa-camera profile-picture-edit" id="edit-profile-picture-icon"></label>
+                    <input type="file" name="photo" id="profile-picture-file" onchange="previewProfilePicture(event)">
+                    {% endif %}
+                </div>
                 <button id="save-profile-picture">Save</button> <!-- Le bouton "Save" est initialement caché -->
-                {% endif %}
             </div>
             {% if user.is_authenticated %}
             <form id="edit-profile-picture-form" style="display:none;" action="{% url 'edit_profile' user.slug %}" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 <input type="file" name="photo" id="profile-picture-file-hidden" style="display: none;">
-                <button type="submit" id="submit-profile-picture">Save</button>
+                <button type="submit" id="submit-profile-picture" style="display: none;">Save</button>
             </form>
-            {% endif %}    
+            {% endif %}
+             
             
             <div>
                 {% if user.is_authenticated %}<i class="fas fa-pen edit-icon" id="edit-profile-name-icon"></i>{% endif %}
