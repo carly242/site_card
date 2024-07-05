@@ -1,5 +1,4 @@
 {% load static %}
-
 {% block content %}
 <!DOCTYPE html>
 <html lang="en">
@@ -9,7 +8,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
     <title>Profile Page</title>
     <style>
-        /* Add your CSS styles here */
         body {
             background: #f0f2f5;
             font-family: 'Arial', sans-serif;
@@ -41,7 +39,7 @@
             height: 150px;
             border-radius: 50%;
             overflow: hidden;
-            margin: 20px auto;
+            margin-right: 20px;
             position: relative;
         }
         .profile-picture {
@@ -49,9 +47,7 @@
             height: 100%;
             object-fit: cover;
             object-position: center;
-           
         }
-        
         .profile-picture-edit {
             position: absolute;
             bottom: 10px;
@@ -64,17 +60,11 @@
         }
         .profile-header h1, .profile-header p {
             margin: 0;
-            position: relative;
         }
         .profile-header .edit-icon {
             margin-left: 10px;
             font-size: 18px;
             cursor: pointer;
-            display: none;
-        }
-        .edit-buttons {
-            margin-top: 10px;
-            display: none;
         }
         .profile-info {
             display: flex;
@@ -86,7 +76,6 @@
             flex: 1;
             min-width: 300px;
             margin: 10px;
-            position: relative;
         }
         .profile-info h2 {
             font-size: 18px;
@@ -126,51 +115,9 @@
             padding: 10px 20px;
             border-radius: 5px;
             display: inline-block;
-            margin: 5px;
         }
         .profile-footer a i {
             margin-right: 5px;
-        }
-        .custom-fields {
-            margin-top: 20px;
-        }
-        .custom-fields input[type="text"], .custom-fields input[type="email"] {
-            width: calc(100% - 22px);
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-        .add-field-btn {
-            background: #3b5998;
-            color: white;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .add-field-btn:hover {
-            background: #2a4272;
-        }
-        .profile-info form.edit-form {
-            display: none;
-        }
-        .profile-info form.show-form {
-            display: block;
-        }
-        .profile-info ul.info-list {
-            list-style: none;
-            padding: 0;
-        }
-        .profile-info ul.info-list li {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-        .profile-info ul.info-list li i {
-            font-size: 20px;
-            color: #3b5998;
-            margin-right: 10px;
         }
         .login-message {
             text-align: center;
@@ -181,38 +128,20 @@
             padding: 10px;
             border-radius: 5px;
         }
-        
-        #save-profile-picture {
-            position: absolute;
-            bottom: -20px; /* Ajustez la position verticale selon vos besoins */
-            left: 50%; /* Ajustez la position horizontale selon vos besoins */
-            transform: translateX(-50%);
-            display: none; /* Le bouton "Save" est initialement caché */
-        }
-        
-        /* Media Queries for Responsive Design */
         @media (max-width: 768px) {
-             .profile-container { 
-                margin: -100px auto 20px automatique; 
-                rembourrage : 10 px ;
-             } 
-             .profile-header { 
-                flex-direction: colonne; 
-                align-items:centre;
-             } 
-             #save-profile-picture {
-                 haut : 100 px ; 
-               droite : 10px ; 
-               rembourrage : 5 px 10 px ; 
-               taille de police : 14 px ; 
-            } 
-            
-            .profile-picture-container { 
-                largeur: 100px; hauteur : 100px ; 
-            
-            } }
-        
-        
+            .profile-container {
+                margin: -100px auto 20px auto;
+                padding: 10px;
+            }
+            .profile-header {
+                flex-direction: column;
+                align-items: center;
+            }
+            .profile-picture-container {
+                width: 100px;
+                height: 100px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -220,37 +149,20 @@
     <div class="profile-container">
         <div class="profile-header">
             <div class="profile-picture-container">
-                <div class="image-container">
-                    <img src="{% if user_profile.photo %}{{ user_profile.photo.url }}{% else %}{% static 'image/User.png' %}{% endif %}" alt="Profile Picture" class="profile-picture" id="profile-picture-preview">
-                    {% if user.is_authenticated %}
-                    <label for="profile-picture-file" class="fas fa-camera profile-picture-edit" id="edit-profile-picture-icon"></label>
-                    <input type="file" name="photo" id="profile-picture-file" onchange="previewProfilePicture(event)">
-                    {% endif %}
-                </div>
-                <button id="save-profile-picture">Save</button> <!-- Le bouton "Save" est initialement caché -->
-            </div>
-            {% if user.is_authenticated %}
-            <form id="edit-profile-picture-form" style="display:none;" action="{% url 'edit_profile' user.slug %}" method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
-                <input type="file" name="photo" id="profile-picture-file-hidden" style="display: none;">
-                <button type="submit" id="submit-profile-picture" style="display: none;">Save</button>
-            </form>
-            {% endif %}
-             
-            
-            <div>
-                {% if user.is_authenticated %}<i class="fas fa-pen edit-icon" id="edit-profile-name-icon"></i>{% endif %}
-                <h1>
-                    {{ user_profile.name | default:"Your Name" }} 
-                   
-                </h1>
-                {% if user.is_authenticated %}
-                <form id="edit-profile-name-form" style="display:none;" action="{% url 'edit_profile' user.slug %}" method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <input type="text" name="name" id="name" value="{{ user_profile.name }}">
-                    <button type="submit">Save</button>
-                </form>
+                <img src="{{ user_profile.photo.url }}" alt="Profile Picture" class="profile-picture">
+                {% if request.user.is_authenticated and request.user == user_profile %}
+                <a href="{% url 'update_profile_picture' user_profile.slug %}" class="profile-picture-edit">
+                    <i class="fas fa-camera"></i>
+                </a>
                 {% endif %}
+            </div>
+            <div>
+                <h1>
+                    {{ user_profile.name | default:"Your Name" }}
+                    {% if user.is_authenticated %}
+                    <i class="fas fa-pen edit-icon" id="edit-profile-name-icon"></i>
+                    {% endif %}
+                </h1>
                 <p>
                     {{ user_profile.function | default:"Your Profession" }}
                     {% if user.is_authenticated %}
@@ -258,6 +170,11 @@
                     {% endif %}
                 </p>
                 {% if user.is_authenticated %}
+                <form id="edit-profile-name-form" style="display:none;" action="{% url 'edit_profile' user.slug %}" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="text" name="name" id="name" value="{{ user_profile.name }}">
+                    <button type="submit">Save</button>
+                </form>
                 <form id="edit-profile-function-form" style="display:none;" action="{% url 'edit_profile' user.slug %}" method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
                     <input type="text" name="function" id="function" value="{{ user_profile.function }}">
@@ -265,7 +182,6 @@
                 </form>
                 {% endif %}
             </div>
-            
         </div>
         <div class="profile-info">
             <div>
@@ -278,7 +194,7 @@
                     <li><i class="fas fa-globe"></i> <a href="{{ user_profile.website }}">{{ user_profile.website }}</a></li>
                 </ul>
                 {% if user.is_authenticated %}
-                <form id="edit-contact-info-form" class="edit-form" action="{% url 'edit_profile' user.slug %}" method="POST">
+                <form id="edit-contact-info-form" class="edit-form" style="display:none;" action="{% url 'edit_profile' user.slug %}" method="POST">
                     {% csrf_token %}
                     <input type="text" name="phone_number" value="{{ user_profile.phone_number }}" placeholder="Phone Number">
                     <input type="email" name="email" value="{{ user_profile.email }}" placeholder="Email">
@@ -298,7 +214,7 @@
                     <li><i class="fab fa-instagram"></i> <a href="{{ user_profile.instagram_link }}">{{ user_profile.instagram_link }}</a></li>
                 </ul>
                 {% if user.is_authenticated %}
-                <form id="edit-social-links-form" class="edit-form" action="{% url 'edit_profile' user.slug %}" method="POST">
+                <form id="edit-social-links-form" class="edit-form" style="display:none;" action="{% url 'edit_profile' user.slug %}" method="POST">
                     {% csrf_token %}
                     <input type="text" name="facebook_link" value="{{ user_profile.facebook_link }}" placeholder="Facebook URL">
                     <input type="text" name="twitter_link" value="{{ user_profile.twitter_link }}" placeholder="Twitter URL">
@@ -308,80 +224,29 @@
                 </form>
                 {% endif %}
             </div>
-            
-            
-            
-        
-        <div class="profile-footer">
-            <a href="{% url 'dowload' user_profile.slug %}"><i class="fas fa-download"></i> Download Contact Info</a>
         </div>
-        {% if not user.is_authenticated %}
+        {% if not request.user.is_authenticated %}
         <div class="login-message">
-            Please <a href="{% url 'Connected' %}">log in</a> to edit your profile.
+            <p>You must <a href="{% url 'login' %}">log in</a> to edit your profile.</p>
         </div>
         {% endif %}
     </div>
+    <div class="profile-footer">
+        <a href="{% url 'dowload' user_profile.slug  %}"><i class="fas fa-download"></i> Download Contact Info</a>
+    </div>
+
     <script>
-        // Fonction pour prévisualiser la photo de profil sélectionnée
-            // Fonction pour prévisualiser la photo de profil sélectionnée
-// Fonction pour prévisualiser la photo de profil sélectionnée
-            function previewProfilePicture(event) {
-                var input = event.target;
-                var reader = new FileReader();
-                reader.onload = function(){
-                    var dataURL = reader.result;
-                    var preview = document.getElementById('profile-picture-preview');
-                    preview.src = dataURL;
-                    // Afficher le bouton "Save" après avoir sélectionné une nouvelle image
-                    document.getElementById('save-profile-picture').style.display = 'block';
-                };
-                reader.readAsDataURL(input.files[0]);
-            }
-
-            // Écouteur d'événement pour cliquer sur l'icône d'édition de la photo de profil
-            document.getElementById('edit-profile-picture-icon').addEventListener('click', function() {
-                document.getElementById('profile-picture-file').click();
+        document.addEventListener("DOMContentLoaded", function() {
+            const editIcons = document.querySelectorAll(".edit-icon");
+            editIcons.forEach(icon => {
+                icon.addEventListener("click", function() {
+                    const formId = this.id.replace('icon', 'form');
+                    const form = document.getElementById(formId);
+                    form.style.display = form.style.display === 'none' ? 'block' : 'none';
+                });
             });
-
-            // Écouteur d'événement pour cliquer sur le bouton "Save"
-            document.getElementById('save-profile-picture').addEventListener('click', function() {
-                var fileInput = document.getElementById('profile-picture-file');
-                var hiddenFileInput = document.getElementById('profile-picture-file-hidden');
-                hiddenFileInput.files = fileInput.files;
-                // Cliquer sur le bouton de soumission caché pour déclencher l'envoi du formulaire
-                document.getElementById('submit-profile-picture').click();
-            });
-// Fonction pour prévisualiser la photo de profil sélectionnée
-    
-        // Event listeners to show edit forms when clicking on edit icons
-        const editIcons = document.querySelectorAll('.edit-icon');
-        editIcons.forEach(icon => {
-            icon.addEventListener('click', () => {
-                const formId = icon.id.replace('icon', 'form');
-                console.log('Editing:', formId);
-                document.getElementById(formId).style.display = 'block';
-                
-            });
-        });
-    
-        // Event listener to add new custom fields
-        document.querySelector('.add-field-btn').addEventListener('click', () => {
-            const customFieldsForm = document.getElementById('edit-custom-fields-form');
-            const newFieldLabel = document.createElement('input');
-            newFieldLabel.type = 'text';
-            newFieldLabel.name = 'custom_fields[new][label]';
-            newFieldLabel.placeholder = 'Field Label';
-            const newFieldValue = document.createElement('input');
-            newFieldValue.type = 'text';
-            newFieldValue.name = 'custom_fields[new][value]';
-            newFieldValue.placeholder = 'Field Value';
-            customFieldsForm.appendChild(newFieldLabel);
-            customFieldsForm.appendChild(newFieldValue);
-            console.log('Adding new custom field...');
         });
     </script>
-    
-    
 </body>
 </html>
 {% endblock %}

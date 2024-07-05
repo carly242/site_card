@@ -47,6 +47,7 @@ urlpatterns =[
 
      path('profile/<slug:slug>/', view_profile, name='profile'),
      path('edit/profil//<slug:slug>/', update_profile, name='edit_profile'),
+     path('update-profile-picture/<slug:slug>/', update_profile_picture, name='update_profile_picture'),
      path('modifier', login_or_edit_profile, name='modifier'),
       path('building', PageBuilding, name='building'),
      path('fonctionnalite', login_or_functions, name='fonctionnalite'),

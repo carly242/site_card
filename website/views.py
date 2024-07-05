@@ -15,7 +15,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 from django.urls import reverse, reverse_lazy
-from .forms import ContactForm, DocumentForm, UserForm
+from .forms import ContactForm, DocumentForm, ProfilePictureForm, UserForm
 from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.auth.views import PasswordResetConfirmView
 from django.contrib.auth import get_user_model
@@ -219,7 +219,20 @@ def update_profile(request, slug):
     # Gérer la requête GET ou d'autres cas
     return JsonResponse({'success': False, 'errors': 'Méthode invalide'})
 
-
+def update_profile_picture(request, slug):
+    user_profile = get_object_or_404(User, slug=slug)
+    
+    if request.method == 'POST':
+        form = ProfilePictureForm(request.POST, request.FILES, instance=user_profile)
+        if form.is_valid():
+            form.save()
+            return redirect('profile', slug=slug)
+        else:
+            errors = form.errors.as_json()
+            return JsonResponse({'success': False, 'errors': errors})
+    
+    form = ProfilePictureForm(instance=user_profile)
+    return render(request, 'dashboard/update_profile_picture.html', {'form': form, 'user_profile': user_profile})
 
 
 

@@ -1,0 +1,100 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
+    <title>Update Profile Picture</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f2f5;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .image-container {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            margin: 0 auto;
+        }
+        .profile-picture {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            object-position: center;
+        }
+        .profile-picture-edit {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 50%;
+            padding: 5px;
+            color: white;
+            cursor: pointer;
+        }
+        #save-profile-picture {
+            display: none;
+            margin-top: 20px;
+            background: #3b5998;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #save-profile-picture:hover {
+            background: #2a4272;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Update Profile Picture</h1>
+        <form id="edit-profile-picture-form" action="{% url 'update_profile_picture' user_profile.slug %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="image-container">
+                <img src="{{ user_profile.photo.url }}" alt="Profile Picture" class="profile-picture" id="profile-picture-preview">
+                <label for="profile-picture-file" class="fas fa-camera profile-picture-edit" id="edit-profile-picture-icon"></label>
+                <input type="file" name="photo" id="profile-picture-file" style="display: none;" onchange="previewProfilePicture(event)">
+            </div>
+            <button type="button" id="save-profile-picture">Save</button>
+            <button type="submit" id="submit-profile-picture" style="display: none;">Save</button>
+        </form>
+    </div>
+
+    <script>
+        function previewProfilePicture(event) {
+            var input = event.target;
+            var reader = new FileReader();
+            reader.onload = function(){
+                var dataURL = reader.result;
+                var preview = document.getElementById('profile-picture-preview');
+                preview.src = dataURL;
+                document.getElementById('save-profile-picture').style.display = 'block';
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+
+        document.getElementById('edit-profile-picture-icon').addEventListener('click', function() {
+            document.getElementById('profile-picture-file').click();
+        });
+
+        document.getElementById('save-profile-picture').addEventListener('click', function() {
+            document.getElementById('submit-profile-picture').click();
+        });
+    </script>
+</body>
+</html>

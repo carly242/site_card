@@ -22,7 +22,11 @@ class UserForm(forms.ModelForm):
 
         for field in self.fields.values():
             field.required = False
-
+            
+class ProfilePictureForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['photo']
 
         
 class DocumentForm(forms.ModelForm):
