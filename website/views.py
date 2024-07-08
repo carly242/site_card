@@ -210,7 +210,12 @@ def update_profile(request, slug):
     if request.method == 'POST':
         form = UserForm(request.POST, request.FILES, instance=user_profile)
         if form.is_valid():
-            form.save()  # Enregistre les modifications dans la base de données, y compris la photo de profil
+            user_profile = form.save(commit=False)  # Enregistre les modifications dans la base de données, y compris les liens de réseaux sociaux
+            user_profile.facebook = form.cleaned_data.get('facebook')
+            user_profile.twitter = form.cleaned_data.get('twitter')
+            user_profile.linkedin = form.cleaned_data.get('linkedin')
+            user_profile.instagram = form.cleaned_data.get('instagram')
+            user_profile.save()
             return redirect('profile', slug=slug)  # Redirige vers la vue de profil après la mise à jour
         else:
             errors = form.errors.as_json()
@@ -218,6 +223,8 @@ def update_profile(request, slug):
     
     # Gérer la requête GET ou d'autres cas
     return JsonResponse({'success': False, 'errors': 'Méthode invalide'})
+
+
 
 def update_profile_picture(request, slug):
     user_profile = get_object_or_404(User, slug=slug)
@@ -237,6 +244,9 @@ def update_profile_picture(request, slug):
 
 
 
+def profile_views(request):
+    user = request.user
+    return render(request, 'dashboard/profile_vieuw.html', {'profile_views': user.profile_views})
 
 
 

@@ -10,6 +10,11 @@ from crispy_forms.layout import Submit
 
 
 class UserForm(forms.ModelForm):
+    facebook = forms.URLField(required=False)  # Champ pour le lien Facebook
+    twitter = forms.URLField(required=False)  # Champ pour le lien Twitter
+    linkedin = forms.URLField(required=False)  # Champ pour le lien LinkedIn
+    instagram = forms.URLField(required=False)  # Champ pour le lien Instagram
+
     class Meta:
         model = User
         fields = ['name', 'function', 'email', 'email_bureau', 'office_number', 'phone_number', 'city', 'adress_link', 'photo', 'website', 'facebook', 'twitter', 'linkedin', 'instagram', 'entreprise']

@@ -75,6 +75,9 @@ urlpatterns =[
     path('aeuser/<int:pk>', AEditUser.as_view(), name='aeuser'),
      path('aduser/<int:pk>', ADeleteUser.as_view(), name='aduser'),
      path('contact/', contact, name='contact'),
+     
+     
+      path('profile-views/', profile_views, name='profile_views')
 
 
 

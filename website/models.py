@@ -37,6 +37,7 @@ class User(AbstractUser):
     twitter = models.CharField(max_length=255, null=True, blank=True)
     linkedin = models.CharField(max_length=255, null=True, blank=True)
     instagram = models.CharField(max_length=255, null=True, blank=True)
+    profile_views = models.IntegerField(default=0)
     slug = models.SlugField(unique=True, blank=True)
 
     def save(self, *args, **kwargs):

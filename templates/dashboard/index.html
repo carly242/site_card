@@ -149,11 +149,16 @@
     <div class="profile-container">
         <div class="profile-header">
             <div class="profile-picture-container">
-                <img src="{{ user_profile.photo.url }}" alt="Profile Picture" class="profile-picture">
+                {% if user_profile.photo %}
+                    <img src="{{ user_profile.photo.url }}" alt="Profile Picture" class="profile-picture">
+                {% else %}
+                    <img src="{% static 'image/User.png' %}" alt="Default Profile Picture" class="profile-picture">
+                {% endif %}
+                
                 {% if request.user.is_authenticated and request.user == user_profile %}
-                <a href="{% url 'update_profile_picture' user_profile.slug %}" class="profile-picture-edit">
-                    <i class="fas fa-camera"></i>
-                </a>
+                    <a href="{% url 'update_profile_picture' user_profile.slug %}" class="profile-picture-edit">
+                        <i class="fas fa-camera"></i>
+                    </a>
                 {% endif %}
             </div>
             <div>
@@ -208,18 +213,18 @@
             <div>
                 <h2>Social Links {% if user.is_authenticated %}<i class="fas fa-pen edit-icon" id="edit-social-links-icon"></i>{% endif %}</h2>
                 <ul class="info-list">
-                    <li><i class="fab fa-facebook"></i> <a href="{{ user_profile.facebook_link }}">{{ user_profile.facebook_link }}</a></li>
-                    <li><i class="fab fa-twitter"></i> <a href="{{ user_profile.twitter_link }}">{{ user_profile.twitter_link }}</a></li>
-                    <li><i class="fab fa-linkedin"></i> <a href="{{ user_profile.linkedin_link }}">{{ user_profile.linkedin_link }}</a></li>
-                    <li><i class="fab fa-instagram"></i> <a href="{{ user_profile.instagram_link }}">{{ user_profile.instagram_link }}</a></li>
+                    <li><i class="fab fa-facebook"></i> <a href="{{ user_profile.facebook }}">{{ user_profile.facebook }}</a></li>
+                    <li><i class="fab fa-twitter"></i> <a href="{{ user_profile.twitter }}">{{ user_profile.twitter }}</a></li>
+                    <li><i class="fab fa-linkedin"></i> <a href="{{ user_profile.linkedin }}">{{ user_profile.linkedin }}</a></li>
+                    <li><i class="fab fa-instagram"></i> <a href="{{ user_profile.instagram }}">{{ user_profile.instagram }}</a></li>
                 </ul>
                 {% if user.is_authenticated %}
                 <form id="edit-social-links-form" class="edit-form" style="display:none;" action="{% url 'edit_profile' user.slug %}" method="POST">
                     {% csrf_token %}
-                    <input type="text" name="facebook_link" value="{{ user_profile.facebook_link }}" placeholder="Facebook URL">
-                    <input type="text" name="twitter_link" value="{{ user_profile.twitter_link }}" placeholder="Twitter URL">
-                    <input type="text" name="linkedin_link" value="{{ user_profile.linkedin_link }}" placeholder="LinkedIn URL">
-                    <input type="text" name="instagram_link" value="{{ user_profile.instagram_link }}" placeholder="Instagram URL">
+                    <input type="text" name="facebook" value="{{ user_profile.facebook }}" placeholder="Facebook URL">
+                    <input type="text" name="twitter" value="{{ user_profile.twitter }}" placeholder="Twitter URL">
+                    <input type="text" name="linkedin" value="{{ user_profile.linkedin }}" placeholder="LinkedIn URL">
+                    <input type="text" name="instagram" value="{{ user_profile.instagram }}" placeholder="Instagram URL">
                     <button type="submit">Save</button>
                 </form>
                 {% endif %}
@@ -227,12 +232,16 @@
         </div>
         {% if not request.user.is_authenticated %}
         <div class="login-message">
-            <p>You must <a href="{% url 'login' %}">log in</a> to edit your profile.</p>
+            <p>Vous devez <a href="{% url 'Connected' %}">Vous Connecter</a> Pour modifier le profil</p>
         </div>
         {% endif %}
     </div>
     <div class="profile-footer">
-        <a href="{% url 'dowload' user_profile.slug  %}"><i class="fas fa-download"></i> Download Contact Info</a>
+        <a href="{% url 'dowload' user_profile.slug  %}"><i class="fas fa-download"></i>Télecharger le contact</a>
+    </div>
+
+    <div class="profile-footer">
+        <a href="{% url 'menu' %}"><i class="fas fa-chevron-right"></i> Acceder au menu</a>
     </div>
 
     <script>

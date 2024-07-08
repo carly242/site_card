@@ -66,7 +66,11 @@
         <form id="edit-profile-picture-form" action="{% url 'update_profile_picture' user_profile.slug %}" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="image-container">
+                {% if user_profile.photo %}
                 <img src="{{ user_profile.photo.url }}" alt="Profile Picture" class="profile-picture" id="profile-picture-preview">
+            {% else %}
+                <img src="{% static 'image/User.png' %}" alt="Default Profile Picture" class="profile-picture" id="profile-picture-preview">
+            {% endif %}
                 <label for="profile-picture-file" class="fas fa-camera profile-picture-edit" id="edit-profile-picture-icon"></label>
                 <input type="file" name="photo" id="profile-picture-file" style="display: none;" onchange="previewProfilePicture(event)">
             </div>
@@ -74,7 +78,7 @@
             <button type="submit" id="submit-profile-picture" style="display: none;">Save</button>
         </form>
     </div>
-
+    
     <script>
         function previewProfilePicture(event) {
             var input = event.target;
