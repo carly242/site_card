@@ -19,6 +19,9 @@ RUN apt-get update \
     nginx \
     && rm -rf /var/lib/apt/lists/*
 
+# Check nginx installation
+RUN nginx -v
+
 # Install Python dependencies
 COPY requirements.txt .
 RUN pip install --upgrade pip \
