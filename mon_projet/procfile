@@ -1,1 +1,1 @@
-web: gunicorn mon_projet.wsgi:application
+web: sh -c "nginx -g 'daemon off;' & gunicorn mon_projet.wsgi:application --bind 0.0.0.0:8000"
